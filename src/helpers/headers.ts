@@ -22,3 +22,24 @@ export function processHeaders(headers: any, data: any): any {
   }
   return headers
 }
+
+// 将响应头转换为对象
+export function parseHeaders(header: string): any {
+  const parsed = Object.create(null)
+  if (!header) {
+    return parsed
+  }
+
+  header.split('\r\n').forEach(line => {
+    let [key, val] = line.split(':')
+    key = key.trim().toLowerCase()
+    if (!key) {
+      return
+    }
+    if (val) {
+      val = val.trim()
+    }
+    parsed[key] = val
+  })
+  return parsed
+}

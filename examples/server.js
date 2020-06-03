@@ -8,13 +8,15 @@ const WebpackConfig = require('./webpack.config')
 const app = express()
 const compiler = webpack(WebpackConfig)
 
-app.use(webpackDevMiddleware(compiler, {
-  publicPath: '/__build__/',
-  stats: {
-    colors: true,
-    chunks: false
-  }
-}))
+app.use(
+  webpackDevMiddleware(compiler, {
+    publicPath: '/__build__/',
+    stats: {
+      colors: true,
+      chunks: false
+    }
+  })
+)
 
 app.use(webpackHotMiddleware(compiler))
 
@@ -31,25 +33,46 @@ router.get('/simple/get', function(req, res) {
   })
 })
 
-router.get('/base/get',function(req,res){
+router.get('/base/get', function(req, res) {
   res.json(req.query)
 })
 
-router.post('/base/post',function(req,res){
+router.post('/base/post', function(req, res) {
   res.json(req.body)
 })
 
-router.post('/base/buffer',function(req,res){
+router.post('/base/buffer', function(req, res) {
   let msg = []
-  req.on('data',(chunk)=>{
-    if(chunk){
+  req.on('data', chunk => {
+    if (chunk) {
       msg.push(chunk)
     }
   })
-  req.on('end',(chunk)=>{
+  req.on('end', chunk => {
     let buf = Buffer.concat(msg)
     res.json(buf.toJSON())
   })
+})
+
+// 错误接口
+router.get('/error/get', function(req, res) {
+  if (Math.random() > 0.5) {
+    res.json({
+      msg: `hello world`
+    })
+  } else {
+    res.status(500)
+    res.end()
+  }
+})
+
+// 超时接口
+router.get('/error/timeout', function(req, res) {
+  setTimeout(() => {
+    res.json({
+      msg: `hello world`
+    })
+  }, 3000)
 })
 
 app.use(router)

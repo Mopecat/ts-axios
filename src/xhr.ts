@@ -1,21 +1,33 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from './types'
+import { parseHeaders } from './helpers/headers'
+import { rejects } from 'assert'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
-  return new Promise(resolve => {
-    const { data = null, url, method = 'get', headers, responseType } = config
+  return new Promise((resolve, reject) => {
+    const { data = null, url, method = 'get', headers, responseType, timeout } = config
     const request = new XMLHttpRequest()
     // 赋值responseType
     if (responseType) {
       request.responseType = responseType
     }
+    // 赋值timeout
+    if (timeout) {
+      request.timeout = timeout
+    }
     // request(method,url,async)
     request.open(method.toUpperCase(), url, true)
 
+    // 监听请求
     request.onreadystatechange = function handleLoad() {
+      // 没有收到响应
       if (request.readyState !== 4) {
         return
       }
-      const responseHeaders = request.getAllResponseHeaders()
+      // 网络错误和超时错误的时候 响应状态码是0
+      if (request.status === 0) {
+        return
+      }
+      const responseHeaders = parseHeaders(request.getAllResponseHeaders())
       // 根据不同的responseType 使用不同的返回值
       const responseData = responseType !== 'text' ? request.response : request.responseText
       const response: AxiosResponse = {
@@ -26,7 +38,16 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         config,
         request
       }
-      resolve(response)
+      handleResponse(response)
+    }
+
+    // 监听错误
+    request.onerror = function handleError() {
+      reject(new Error('Network Error'))
+    }
+    // 监听超时
+    request.ontimeout = function handleTimeout() {
+      reject(new Error(`Timeout of ${timeout} ms exceeded`))
     }
     // 设置头部
     Object.keys(headers).forEach(name => {
@@ -40,5 +61,14 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     })
     // 发送数据
     request.send(data)
+    // 响应处理方法
+    function handleResponse(response: AxiosResponse): void {
+      // TODO 如果是304会报错
+      if (response.status >= 200 && response.status < 300) {
+        resolve(response)
+      } else {
+        reject(new Error(`Request failed width status code ${response.status}`))
+      }
+    }
   })
 }
