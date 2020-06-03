@@ -11,7 +11,7 @@ function encode(val: string): string {
     .replace(/%5D/, ']')
 }
 export function buildURL(url: string, params?: any): string {
-  // 如果没有params 则人会url
+  // 如果没有params 则返回url
   if (!params) {
     return url
   }

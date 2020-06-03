@@ -11,10 +11,25 @@ export type Method =
   | 'POST'
   | 'patch'
   | 'PATCH'
+
+// axios请求参数类型接口
 export interface AxiosRequestConfig {
   url: string
   method?: Method
   data?: any
   params?: any
   headers?: any
+  responseType?: XMLHttpRequestResponseType
 }
+
+// axios返回数据类型接口
+export interface AxiosResponse {
+  status: number
+  statusText: string
+  data: any
+  headers: any
+  config: AxiosRequestConfig
+  request: any
+}
+
+export interface AxiosPromise extends Promise<AxiosResponse> {}

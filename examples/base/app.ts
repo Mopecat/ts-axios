@@ -95,6 +95,12 @@ axios({
     b: 2
   }
 })
+  .then(res => {
+    console.log(res)
+  })
+  .catch(err => {
+    console.log(err)
+  })
 
 // 配置headers
 axios({
@@ -104,17 +110,24 @@ axios({
     'content-type': 'application/json',
     Accept: 'application/json,text/plain,*/*'
   },
+  responseType: 'json',
   data: {
     a: 1,
     b: 2
   }
 })
+  .then(res => {
+    console.log(res)
+  })
+  .catch(err => {
+    console.log(err)
+  })
 
-const paramsString = 'q=URLUtils.searchParams&topic=api'
-const searchParams = new URLSearchParams(paramsString)
+// const paramsString = 'q=URLUtils.searchParams&topic=api'
+// const searchParams = new URLSearchParams(paramsString)
 
-axios({
-  method: 'post',
-  url: '/base/post',
-  data: searchParams
-})
+// axios({
+//   method: 'post',
+//   url: '/base/post',
+//   data: searchParams
+// })
