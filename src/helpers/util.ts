@@ -12,3 +12,11 @@ export function isDate(val: any): val is Date {
 export function isPlainObject(val: any): val is Object {
   return toString.call(val) === '[object Object]'
 }
+
+// 复制所有属性
+export function extend<T, U>(to: T, from: U): T & U {
+  for (let key in from) {
+    ;(to as T & U)[key] = (from as T & U)[key]
+  }
+  return to as T & U
+}

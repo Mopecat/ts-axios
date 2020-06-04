@@ -1,4 +1,4 @@
-import axios from '../../src/index'
+import axios, { AxiosError } from '../../src/index'
 
 // 404测试用例
 axios({
@@ -47,6 +47,10 @@ axios({
   .then(res => {
     console.log(res)
   })
-  .catch(err => {
-    console.log(err.message)
+  .catch((e: AxiosError) => {
+    console.log('message', e.message)
+    console.log('isAxiosError', e.isAxiosError)
+    console.log('config', e.config)
+    console.log('code', e.code)
+    console.log('request', e.request)
   })
