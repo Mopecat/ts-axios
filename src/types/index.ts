@@ -67,4 +67,6 @@ export interface Axios {
 // 作为axios的类型 是一个联合类型 本身是一个函数，但是还有上面接口的那些属性
 export interface AxiosInstance extends Axios {
   (config: AxiosRequestConfig): AxiosPromise
+  // axios还接受可以传两个参数 分别是url和config 所以需要给这个接口在定义一个函数类型 后面的request用函数的重载去实现
+  (url: string, config?: AxiosRequestConfig): AxiosPromise
 }
