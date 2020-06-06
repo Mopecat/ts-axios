@@ -1,3 +1,6 @@
+/**
+ * 公共类型定义文件
+ */
 export type Method =
   | 'get'
   | 'GET'
@@ -69,4 +72,18 @@ export interface AxiosInstance extends Axios {
   <T = any>(config: AxiosRequestConfig): AxiosPromise<T>
   // axios还接受可以传两个参数 分别是url和config 所以需要给这个接口在定义一个函数类型 后面的request用函数的重载去实现
   <T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+}
+
+// 拦截器类型定义
+export interface AxiosInterceptorManager<T> {
+  use(resloved: ResolvedFn<T>, rejected: RejectedFn): number
+  eject(id: number): void
+}
+
+export interface ResolvedFn<T> {
+  (val: T): T | Promise<T>
+}
+
+export interface RejectedFn {
+  (err: any): any
 }
