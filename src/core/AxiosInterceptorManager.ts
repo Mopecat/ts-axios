@@ -1,4 +1,4 @@
-import { AxiosInterceptorManager, ResolvedFn, RejectedFn } from '../types'
+import { ResolvedFn, RejectedFn } from '../types'
 
 interface Interceptor<T> {
   resolved: ResolvedFn<T>

@@ -31,6 +31,7 @@ resisterSimpleRouter()
 resisterBaseRouter()
 resisterErrorRouter()
 resisterExtendRouter()
+resisterInterceptorRouter()
 
 function resisterSimpleRouter() {
   router.get('/simple/get', function(req, res) {
@@ -120,6 +121,12 @@ function resisterExtendRouter() {
         age: 18
       }
     })
+  })
+}
+
+function resisterInterceptorRouter() {
+  router.get('/interceptor/get', function(req, res) {
+    res.end('hello')
   })
 }
 
